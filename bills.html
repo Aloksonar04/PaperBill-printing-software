@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>All Bills</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f4f4f4;
+    }
+    nav {
+      margin-bottom: 20px;
+    }
+    a {
+      margin-right: 15px;
+      text-decoration: none;
+      color: #007BFF;
+    }
+  </style>
+</head>
+<body>
+  <h1>All Bills</h1>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="billing.html">Create a Bill</a>
+  </nav>
+  <table>
+    <thead>
+      <tr>
+        <th>Customer Name</th>
+        <th>Contact</th>
+        <th>Paper Type</th>
+        <th>Quantity</th>
+        <th>Rate</th>
+        <th>Total Amount</th>
+      </tr>
+    </thead>
+    <tbody id="billsTableBody">
+      <!-- Bills will be dynamically loaded here -->
+    </tbody>
+  </table>
+
+
+  <script>
+    function loadBills() {
+      const bills = JSON.parse(localStorage.getItem('bills')) || [];
+      const tableBody = document.getElementById('billsTableBody');
+      tableBody.innerHTML = '';
+
+
+      bills.forEach(bill => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${bill.customerName}</td>
+          <td>${bill.customerContact}</td>
+          <td>${bill.paperType}</td>
+          <td>${bill.quantity}</td>
+          <td>${bill.rate}</td>
+          <td>₹${bill.amount.toFixed(2)}</td>
+        `;
+        tableBody.appendChild(row);
+      });
+    }
+
+
+    // Load bills when the page is loaded
+    window.onload = loadBills;
+  </script>
+</body>
+</html>

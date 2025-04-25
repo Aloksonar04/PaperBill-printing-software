@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paper Bill Generator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background-color: #f4f4f9;
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+      color: #0056b3;
+    }
+    nav {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    nav a {
+      margin: 10px;
+      color: #007BFF;
+      text-decoration: none;
+      font-size: 16px;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    form {
+      max-width: 500px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    label {
+      display: block;
+      margin-top: 10px;
+      font-size: 16px;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    button {
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .bill {
+      margin-top: 20px;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background-color: #ffffff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .print-button {
+      text-align: center;
+      margin-top: 15px;
+    }
+    .print-button button {
+      background-color: #28a745;
+    }
+    .print-button button:hover {
+      background-color: #218838;
+    }
+  </style>
+</head>
+<body>
+  <h1>Paper Bill Generator</h1>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="bills.html">View All Bills</a>
+  </nav>
+ 
+  <form id="billForm">
+    <label for="customerName">Customer Name</label>
+    <input type="text" id="customerName" name="customerName" required>
+
+
+    <label for="customerContact">Customer Contact</label>
+    <input type="text" id="customerContact" name="customerContact" required>
+
+
+    <label for="paperType">Paper Type</label>
+    <select id="paperType" name="paperType" required>
+      <option value="A4">A4</option>
+      <option value="A3">A3</option>
+      <option value="Cardboard">Cardboard</option>
+    </select>
+   
+    <label for="quantity">Quantity</label>
+    <input type="number" id="quantity" name="quantity" required>
+   
+    <label for="rate">Rate (per unit)</label>
+    <input type="number" id="rate" name="rate" required>
+   
+    <button type="button" onclick="generateBill()">Generate Bill</button>
+  </form>
+ 
+  <div id="billOutput" class="bill" style="display:none;">
+    <h2>Bill Details</h2>
+    <p><strong>Customer Name:</strong> <span id="billCustomerName"></span></p>
+    <p><strong>Customer Contact:</strong> <span id="billCustomerContact"></span></p>
+    <p><strong>Paper Type:</strong> <span id="billPaperType"></span></p>
+    <p><strong>Quantity:</strong> <span id="billQuantity"></span></p>
+    <p><strong>Rate:</strong> <span id="billRate"></span></p>
+    <p><strong>Total Amount:</strong> ₹<span id="billAmount"></span></p>
+    <div class="print-button">
+      <button onclick="printBill()">Print Bill</button>
+    </div>
+  </div>
+
+
+  <script>
+    function generateBill() {
+      const customerName = document.getElementById('customerName').value;
+      const customerContact = document.getElementById('customerContact').value;
+      const paperType = document.getElementById('paperType').value;
+      const quantity = parseFloat(document.getElementById('quantity').value);
+      const rate = parseFloat(document.getElementById('rate').value);
+
+
+      if (!quantity || !rate || !customerName || !customerContact) {
+        alert("Please enter all the required information.");
+        return;
+      }
+
+
+      const amount = quantity * rate;
+
+
+      // Display the bill
+      document.getElementById('billCustomerName').textContent = customerName;
+      document.getElementById('billCustomerContact').textContent = customerContact;
+      document.getElementById('billPaperType').textContent = paperType;
+      document.getElementById('billQuantity').textContent = quantity;
+      document.getElementById('billRate').textContent = rate;
+      document.getElementById('billAmount').textContent = amount.toFixed(2);
+      document.getElementById('billOutput').style.display = 'block';
+
+
+      // Save the bill in local storage
+      const bills = JSON.parse(localStorage.getItem('bills')) || [];
+      bills.push({ customerName, customerContact, paperType, quantity, rate, amount });
+      localStorage.setItem('bills', JSON.stringify(bills));
+    }
+
+
+    function printBill() {
+      const printContents = document.getElementById('billOutput').innerHTML;
+      const originalContents = document.body.innerHTML;
+      document.body.innerHTML = printContents;
+      window.print();
+      document.body.innerHTML = originalContents;
+    }
+  </script>
+</body>
+</html>
